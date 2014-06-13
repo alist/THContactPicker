@@ -27,7 +27,9 @@ UIBarButtonItem *barButton;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = @"Select Contacts (0)";
+        self.title = @"Add Contacts (0)";
+        
+        self.contactsByRecordIDNumber = [NSMutableDictionary new];
         
         CFErrorRef error;
         _addressBookRef = ABAddressBookCreateWithOptions(NULL, &error);
@@ -42,7 +44,6 @@ UIBarButtonItem *barButton;
     //    UIBarButtonItem * barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleBordered target:self action:@selector(removeAllContacts:)];
     
     barButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
-    barButton.enabled = FALSE;
     
     self.navigationItem.rightBarButtonItem = barButton;
     
@@ -112,6 +113,7 @@ UIBarButtonItem *barButton;
             }
             
             [mutableContacts addObject:contact];
+            [self.contactsByRecordIDNumber setObject:contact forKey:@(contact.recordId)];
         }
         
         if(addressBook) {
@@ -319,45 +321,7 @@ UIBarButtonItem *barButton;
     if(contact.phone == nil) {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No phone number", @"contact pick no phone number") message:NSLocalizedString(@"Headtalk relies on phone numbers.\nPlease add one!", @"headtalk needs phone number") delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"accept alert") otherButtonTitles:nil, nil] show];
     }
-    
-    
-    
-//    UIImageView *checkboxImageView = (UIImageView *)[cell viewWithTag:104];
-//    UIImage *image;
-//    
-//    if ([self.selectedContacts containsObject:contact]){ // contact is already selected so remove it from ContactPickerView
-//        //cell.accessoryType = UITableViewCellAccessoryNone;
-//        [self.selectedContacts removeObject:contact];
-//        [self.contactPickerView removeContact:contact];
-//        // Set checkbox to "unselected"
-//        image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
-//    } else {
-//        // Contact has not been selected, add it to THContactPickerView
-//        //cell.accessoryType = UITableViewCellAccessoryCheckmark;
-//        [self.selectedContacts addObject:contact];
-//        [self.contactPickerView addContact:contact withName:contact.fullName];
-//        // Set checkbox to "selected"
-//        image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
-//    }
-//    
-//    // Enable Done button if total selected contacts > 0
-//    if(self.selectedContacts.count > 0) {
-//        barButton.enabled = TRUE;
-//    }
-//    else
-//    {
-//        barButton.enabled = FALSE;
-//    }
-//    
-//    // Update window title
-//    self.title = [NSString stringWithFormat:@"Add Members (%lu)", (unsigned long)self.selectedContacts.count];
-//    
-//    // Set checkbox image
-//    checkboxImageView.image = image;
-//    // Reset the filtered contacts
-//    self.filteredContacts = self.contacts;
-//    // Refresh the tableview
-//    [self.tableView reloadData];
+
 }
 
 
@@ -388,15 +352,6 @@ UIBarButtonItem *barButton;
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
     //cell.accessoryType = UITableViewCellAccessoryNone;
     
-    // Enable Done button if total selected contacts > 0
-    if(self.selectedContacts.count > 0) {
-        barButton.enabled = TRUE;
-    }
-    else
-    {
-        barButton.enabled = FALSE;
-    }
-    
     // Set unchecked image
     UIImageView *checkboxImageView = (UIImageView *)[cell viewWithTag:104];
     UIImage *image;
@@ -404,7 +359,7 @@ UIBarButtonItem *barButton;
     checkboxImageView.image = image;
     
     // Update window title
-    self.title = [NSString stringWithFormat:@"Add Members (%lu)", (unsigned long)self.selectedContacts.count];
+    self.title = [NSString stringWithFormat:@"Add Contacts (%lu)", (unsigned long)self.selectedContacts.count];
 }
 
 - (void)removeAllContacts:(id)sender
@@ -418,8 +373,29 @@ UIBarButtonItem *barButton;
 
 - (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier{
     
+    if (property != kABPersonPhoneProperty)
+        return NO;
     
-    return NO;
+    THContact * contact =  [self.contactsByRecordIDNumber objectForKey:@(ABRecordGetRecordID(person))];
+    
+    if ([self.selectedContacts containsObject:contact]){ // contact is already selected so remove it from ContactPickerView
+        [self.selectedContacts removeObject:contact];
+        [self.contactPickerView removeContact:contact];
+    } else {
+        [self.selectedContacts addObject:contact];
+        [self.contactPickerView addContact:contact withName:contact.fullName];
+    }
+    
+    [self.navigationController popViewControllerAnimated:true];
+    
+    self.title = [NSString stringWithFormat:@"Add Contacts (%lu)", (unsigned long)self.selectedContacts.count];
+    
+    // Reset the filtered contacts
+    self.filteredContacts = self.contacts;
+    
+    [self.tableView reloadData];
+    
+    return NO; //anyway..
 }
 
 - (IBAction)viewContactDetail:(UIButton*)sender {

@@ -15,8 +15,10 @@
 
 @property (nonatomic, strong) THContactPickerView *contactPickerView;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *contacts;
-@property (nonatomic, strong) NSMutableArray *selectedContacts;
-@property (nonatomic, strong) NSArray *filteredContacts;
+@property (nonatomic, strong) NSArray *contacts; //THContact
+@property (nonatomic, strong) NSMutableArray *selectedContacts; //THContact
+@property (nonatomic, strong) NSArray *filteredContacts; //THContact
+
+@property (nonatomic, strong) NSMutableDictionary * contactsByRecordIDNumber; //THContact by NSNumber(ABRecordID)
 
 @end
