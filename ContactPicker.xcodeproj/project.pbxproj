@@ -32,6 +32,8 @@
 		29A71C1816448473005286F1 /* THContactBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A71C1716448473005286F1 /* THContactBubble.m */; };
 		4F743B831904207300AE8765 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F743B821904207300AE8765 /* AddressBookUI.framework */; };
 		6AE31FCC1644DB2C00505230 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE31FCB1644DB2C00505230 /* QuartzCore.framework */; };
+		79596E6D194B9C4700B895CE /* THContactPhonePickerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79596E6C194B9C4700B895CE /* THContactPhonePickerTableViewCell.xib */; };
+		79596E70194B9D3D00B895CE /* THContactPhonePickerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79596E6F194B9D3D00B895CE /* THContactPhonePickerTableViewCell.m */; };
 		84F796481670C79500A8965D /* THBubbleColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F796471670C79500A8965D /* THBubbleColor.m */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +72,9 @@
 		29A71C1716448473005286F1 /* THContactBubble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THContactBubble.m; sourceTree = "<group>"; };
 		4F743B821904207300AE8765 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		6AE31FCB1644DB2C00505230 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		79596E6C194B9C4700B895CE /* THContactPhonePickerTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = THContactPhonePickerTableViewCell.xib; sourceTree = "<group>"; };
+		79596E6E194B9D3D00B895CE /* THContactPhonePickerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THContactPhonePickerTableViewCell.h; sourceTree = "<group>"; };
+		79596E6F194B9D3D00B895CE /* THContactPhonePickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THContactPhonePickerTableViewCell.m; sourceTree = "<group>"; };
 		84F796461670C79500A8965D /* THBubbleColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THBubbleColor.h; sourceTree = "<group>"; };
 		84F796471670C79500A8965D /* THBubbleColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THBubbleColor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,6 +144,9 @@
 				0446052D18E4D5750091723F /* THContactPickerTableViewCell.h */,
 				0446052E18E4D5750091723F /* THContactPickerTableViewCell.m */,
 				0446052F18E4D5750091723F /* THContactPickerTableViewCell.xib */,
+				79596E6E194B9D3D00B895CE /* THContactPhonePickerTableViewCell.h */,
+				79596E6F194B9D3D00B895CE /* THContactPhonePickerTableViewCell.m */,
+				79596E6C194B9C4700B895CE /* THContactPhonePickerTableViewCell.xib */,
 				0446053218E4D5D50091723F /* THContact.h */,
 				0446053318E4D5D50091723F /* THContact.m */,
 			);
@@ -223,6 +231,7 @@
 				29A71BFA16448250005286F1 /* Default.png in Resources */,
 				0446053F18E4D6990091723F /* icon-checkbox-selected-green-25x25.png in Resources */,
 				0446053E18E4D6990091723F /* icon-avatar-60x60@2x.png in Resources */,
+				79596E6D194B9C4700B895CE /* THContactPhonePickerTableViewCell.xib in Resources */,
 				29A71BFC16448250005286F1 /* Default@2x.png in Resources */,
 				29A71BFE16448250005286F1 /* Default-568h@2x.png in Resources */,
 				0446053118E4D5750091723F /* THContactPickerTableViewCell.xib in Resources */,
@@ -238,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79596E70194B9D3D00B895CE /* THContactPhonePickerTableViewCell.m in Sources */,
 				29A71BF416448250005286F1 /* main.m in Sources */,
 				29A71BF816448250005286F1 /* AppDelegate.m in Sources */,
 				0446053018E4D5750091723F /* THContactPickerTableViewCell.m in Sources */,

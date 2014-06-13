@@ -57,7 +57,7 @@ UIBarButtonItem *barButton;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    [self.tableView registerNib:[UINib nibWithNibName:@"THContactPickerTableViewCell" bundle:nil] forCellReuseIdentifier:@"ContactCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"THContactPhonePickerTableViewCell" bundle:nil] forCellReuseIdentifier:@"THContactPhonePickerTableViewCell"];
     
     [self.view insertSubview:self.tableView belowSubview:self.contactPickerView];
     
@@ -79,7 +79,7 @@ UIBarButtonItem *barButton;
     
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
     if (addressBook) {
-        NSArray *allContacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSArray *allContacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(addressBook, NULL, kABPersonSortByFirstName);
         NSMutableArray *mutableContacts = [NSMutableArray arrayWithCapacity:allContacts.count];
         
         NSUInteger i = 0;
@@ -171,17 +171,18 @@ UIBarButtonItem *barButton;
 
 - (NSString *)getMobilePhoneProperty:(ABMultiValueRef)phonesRef
 {
+    
+    NSString * bestPhone = nil;
+    
     for (int i=0; i < ABMultiValueGetCount(phonesRef); i++) {
         CFStringRef currentPhoneLabel = ABMultiValueCopyLabelAtIndex(phonesRef, i);
         CFStringRef currentPhoneValue = ABMultiValueCopyValueAtIndex(phonesRef, i);
         
         if(currentPhoneLabel) {
             if (CFStringCompare(currentPhoneLabel, kABPersonPhoneMobileLabel, 0) == kCFCompareEqualTo) {
-                return (__bridge NSString *)currentPhoneValue;
-            }
-            
-            if (CFStringCompare(currentPhoneLabel, kABHomeLabel, 0) == kCFCompareEqualTo) {
-                return (__bridge NSString *)currentPhoneValue;
+                bestPhone = (__bridge NSString *)currentPhoneValue;
+            }else if (bestPhone == nil){
+                bestPhone = (__bridge NSString *)currentPhoneValue;
             }
         }
         if(currentPhoneLabel) {
@@ -192,7 +193,7 @@ UIBarButtonItem *barButton;
         }
     }
     
-    return nil;
+    return bestPhone;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -264,7 +265,7 @@ UIBarButtonItem *barButton;
     THContact *contact = [self.filteredContacts objectAtIndex:indexPath.row];
     
     // Initialize the table view cell
-    NSString *cellIdentifier = @"ContactCell";
+    NSString *cellIdentifier = @"THContactPhonePickerTableViewCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -296,75 +297,72 @@ UIBarButtonItem *barButton;
     }
     checkboxImageView.image = image;
     
-    // Assign a UIButton to the accessoryView cell property
-    cell.accessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    // Set a target and selector for the accessoryView UIControlEventTouchUpInside
-    [(UIButton *)cell.accessoryView addTarget:self action:@selector(viewContactDetail:) forControlEvents:UIControlEventTouchUpInside];
-    cell.accessoryView.tag = contact.recordId; //so we know which ABRecord in the IBAction method
-    
-    // // For custom accessory view button use this.
-    //    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    //    button.frame = CGRectMake(0.0f, 0.0f, 150.0f, 25.0f);
-    //
-    //    [button setTitle:@"Expand"
-    //            forState:UIControlStateNormal];
-    //
-    //    [button addTarget:self
-    //               action:@selector(viewContactDetail:)
-    //     forControlEvents:UIControlEventTouchUpInside];
-    //
-    //    cell.accessoryView = button;
-    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Hide Keyboard
     [self.contactPickerView resignKeyboard];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    THContact *contact = [self.filteredContacts objectAtIndex:indexPath.row];
     
-    // This uses the custom cellView
-    // Set the custom imageView
-    THContact *user = [self.filteredContacts objectAtIndex:indexPath.row];
-    UIImageView *checkboxImageView = (UIImageView *)[cell viewWithTag:104];
-    UIImage *image;
+    ABRecordID personId = (ABRecordID)contact.recordId;
+    ABPersonViewController *viewController = [[ABPersonViewController alloc] init];
+    viewController.title = NSLocalizedString(@"Tap iPhone #", @"contact picker tap partner's iPhone number");
+    viewController.addressBook = self.addressBookRef;
+    viewController.personViewDelegate = self;
+    viewController.displayedPerson = ABAddressBookGetPersonWithRecordID(self.addressBookRef, personId);
     
-    if ([self.selectedContacts containsObject:user]){ // contact is already selected so remove it from ContactPickerView
-        //cell.accessoryType = UITableViewCellAccessoryNone;
-        [self.selectedContacts removeObject:user];
-        [self.contactPickerView removeContact:user];
-        // Set checkbox to "unselected"
-        image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
-    } else {
-        // Contact has not been selected, add it to THContactPickerView
-        //cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [self.selectedContacts addObject:user];
-        [self.contactPickerView addContact:user withName:user.fullName];
-        // Set checkbox to "selected"
-        image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
+    [self.navigationController pushViewController:viewController animated:YES];
+    
+    if(contact.phone == nil) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No phone number", @"contact pick no phone number") message:NSLocalizedString(@"Headtalk relies on phone numbers.\nPlease add one!", @"headtalk needs phone number") delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"accept alert") otherButtonTitles:nil, nil] show];
     }
     
-    // Enable Done button if total selected contacts > 0
-    if(self.selectedContacts.count > 0) {
-        barButton.enabled = TRUE;
-    }
-    else
-    {
-        barButton.enabled = FALSE;
-    }
     
-    // Update window title
-    self.title = [NSString stringWithFormat:@"Add Members (%lu)", (unsigned long)self.selectedContacts.count];
     
-    // Set checkbox image
-    checkboxImageView.image = image;
-    // Reset the filtered contacts
-    self.filteredContacts = self.contacts;
-    // Refresh the tableview
-    [self.tableView reloadData];
+//    UIImageView *checkboxImageView = (UIImageView *)[cell viewWithTag:104];
+//    UIImage *image;
+//    
+//    if ([self.selectedContacts containsObject:contact]){ // contact is already selected so remove it from ContactPickerView
+//        //cell.accessoryType = UITableViewCellAccessoryNone;
+//        [self.selectedContacts removeObject:contact];
+//        [self.contactPickerView removeContact:contact];
+//        // Set checkbox to "unselected"
+//        image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
+//    } else {
+//        // Contact has not been selected, add it to THContactPickerView
+//        //cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//        [self.selectedContacts addObject:contact];
+//        [self.contactPickerView addContact:contact withName:contact.fullName];
+//        // Set checkbox to "selected"
+//        image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
+//    }
+//    
+//    // Enable Done button if total selected contacts > 0
+//    if(self.selectedContacts.count > 0) {
+//        barButton.enabled = TRUE;
+//    }
+//    else
+//    {
+//        barButton.enabled = FALSE;
+//    }
+//    
+//    // Update window title
+//    self.title = [NSString stringWithFormat:@"Add Members (%lu)", (unsigned long)self.selectedContacts.count];
+//    
+//    // Set checkbox image
+//    checkboxImageView.image = image;
+//    // Reset the filtered contacts
+//    self.filteredContacts = self.contacts;
+//    // Refresh the tableview
+//    [self.tableView reloadData];
+}
+
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self.contactPickerView resignKeyboard];
 }
 
 #pragma mark - THContactPickerTextViewDelegate
@@ -418,23 +416,14 @@ UIBarButtonItem *barButton;
 }
 #pragma mark ABPersonViewControllerDelegate
 
-- (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
-{
-    return YES;
+- (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier{
+    
+    
+    return NO;
 }
 
-
-// This opens the apple contact details view: ABPersonViewController
-//TODO: make a THContactPickerDetailViewController
 - (IBAction)viewContactDetail:(UIButton*)sender {
-    ABRecordID personId = (ABRecordID)sender.tag;
-    ABPersonViewController *view = [[ABPersonViewController alloc] init];
-    view.addressBook = self.addressBookRef;
-    view.personViewDelegate = self;
-    view.displayedPerson = ABAddressBookGetPersonWithRecordID(self.addressBookRef, personId);
-
-    
-    [self.navigationController pushViewController:view animated:YES];
+    //n/a
 }
 
 // TODO: send contact object
