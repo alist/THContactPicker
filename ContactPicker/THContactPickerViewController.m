@@ -9,6 +9,8 @@
 #import "THContactPickerViewController.h"
 #import <AddressBook/AddressBook.h>
 #import "THContact.h"
+#import "THContactPickerTableViewCell.h"
+
 
 UIBarButtonItem *barButton;
 
@@ -403,14 +405,9 @@ UIBarButtonItem *barButton;
 }
 
 // TODO: send contact object
-- (void)done:(id)sender
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Done!"
-                                                        message:@"Now do whatevet you want!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-    [alertView show];
+- (void)done:(id)sender{
+    [self.delegate contactPickerViewControllerDidFinish:self withContacts:self.selectedContacts];
+    
 }
 
 @end
