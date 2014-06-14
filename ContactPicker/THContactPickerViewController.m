@@ -176,7 +176,7 @@ UIBarButtonItem *barButton;
 - (NSString *)getMobilePhoneProperty:(ABMultiValueRef)phonesRef
 {
     
-    NSString * bestPhone = nil;
+    CFStringRef bestPhone = NULL;
     
     for (int i=0; i < ABMultiValueGetCount(phonesRef); i++) {
         CFStringRef currentPhoneLabel = ABMultiValueCopyLabelAtIndex(phonesRef, i);
@@ -184,9 +184,9 @@ UIBarButtonItem *barButton;
         
         if(currentPhoneLabel) {
             if (CFStringCompare(currentPhoneLabel, kABPersonPhoneMobileLabel, 0) == kCFCompareEqualTo) {
-                bestPhone = [NSString stringWithString:(__bridge NSString *)currentPhoneValue];
-            }else if (bestPhone == nil){
-                bestPhone = [NSString stringWithString:(__bridge NSString *)currentPhoneValue];
+                bestPhone = currentPhoneValue;
+            }else if (bestPhone == NULL){
+                bestPhone = currentPhoneValue;
             }
         }
         if(currentPhoneLabel) {
@@ -196,8 +196,10 @@ UIBarButtonItem *barButton;
             CFRelease(currentPhoneValue);
         }
     }
+    if (bestPhone != NULL)
+        CFRetain(bestPhone);
     
-    return bestPhone;
+    return (__bridge NSString *)(bestPhone);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
