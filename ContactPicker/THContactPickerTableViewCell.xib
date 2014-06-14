@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="THContactPickerTableViewCell" rowHeight="67" id="djk-m6-GBi" customClass="THContactPickerTableViewCell">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="THContactPickerTableViewCell" rowHeight="67" id="djk-m6-GBi" customClass="THContactPickerTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="67"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="djk-m6-GBi" id="YXG-2t-pMp">
@@ -38,6 +38,12 @@
                     </imageView>
                 </subviews>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="checkboxImageView" destination="0h7-ed-gn0" id="EDR-D0-DWH"/>
+                <outlet property="contactImageView" destination="OdA-ti-mIb" id="N8l-pb-yPO"/>
+                <outlet property="contactNameLabel" destination="Mxf-QX-zXL" id="jdc-b1-xen"/>
+                <outlet property="mobilePhoneNumberLabel" destination="WfR-2O-CTD" id="kkS-yY-fLE"/>
+            </connections>
         </tableViewCell>
     </objects>
     <resources>
