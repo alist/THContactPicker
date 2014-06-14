@@ -7,19 +7,59 @@
 //
 
 #import "THContactPickerTableViewCell.h"
+#import "Friend.h"
 
 @implementation THContactPickerTableViewCell
 
-- (void)awakeFromNib
-{
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
+
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+	
+	UINib * nib = [self viewNib];
+	if ((self = [[nib instantiateWithOwner:nil options:nil] objectAtIndex:0])){
+		[self setup];
+	}
+	return self;
+}
+
+-(void)setup{
+    self.contactImageView.layer.masksToBounds = YES;
+    self.contactImageView.layer.cornerRadius = 20;
+}
+
+-(UINib*) viewNib{
+	return [UINib nibWithNibName:@"THContactPickerTableViewCell" bundle:[NSBundle mainBundle]];
+}
+
+- (BOOL)shouldUpdateCellWithObject:(Friend*)contact{
+    
+    self.contactNameLabel.text = [contact displayName];
+    self.mobilePhoneNumberLabel.text = contact.formattedPhoneNumber;
+    if(contact.userImage) {
+        self.contactImageView.image = contact.userImage;
+    }else{
+        self.contactImageView.image = [UIImage imageNamed:@"icon-avatar-60x60"];
+    }
+    
+    // Set the checked state for the contact selection checkbox
+    UIImage *image;
+    if (contact.isActive){
+        image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
+    } else {
+        image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
+    }
+    self.checkboxImageView.image = image;
+    
+	return TRUE;
+}
+
+
++ (CGFloat)heightForObject:(NSObject*)request atIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    const double cellHeight = 67;
+    return cellHeight;
+}
+
 
 @end
