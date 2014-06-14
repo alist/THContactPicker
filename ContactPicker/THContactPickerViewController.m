@@ -184,9 +184,9 @@ UIBarButtonItem *barButton;
         
         if(currentPhoneLabel) {
             if (CFStringCompare(currentPhoneLabel, kABPersonPhoneMobileLabel, 0) == kCFCompareEqualTo) {
-                bestPhone = (__bridge NSString *)currentPhoneValue;
+                bestPhone = [NSString stringWithString:(__bridge NSString *)currentPhoneValue];
             }else if (bestPhone == nil){
-                bestPhone = (__bridge NSString *)currentPhoneValue;
+                bestPhone = [NSString stringWithString:(__bridge NSString *)currentPhoneValue];
             }
         }
         if(currentPhoneLabel) {

@@ -36,6 +36,10 @@
 - (BOOL)shouldUpdateCellWithObject:(Friend*)contact{
     
     self.contactNameLabel.text = [contact displayName];
+    if (contact.isLocalUser.boolValue){
+        self.contactNameLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ (YOU)", @"users own name on cell string format"),contact.displayName];
+    }
+    
     self.mobilePhoneNumberLabel.text = contact.formattedPhoneNumber;
     if(contact.userImage) {
         self.contactImageView.image = contact.userImage;
@@ -45,7 +49,7 @@
     
     // Set the checked state for the contact selection checkbox
     UIImage *image;
-    if (contact.isActive){
+    if (contact.isActive.boolValue){
         image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
     } else {
         image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
