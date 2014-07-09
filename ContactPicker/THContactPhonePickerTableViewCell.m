@@ -25,6 +25,8 @@
 }
 
 -(void)setup{
+    self.contactImageView.layer.masksToBounds = YES;
+    self.contactImageView.layer.cornerRadius = 20;
 }
 
 
