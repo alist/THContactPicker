@@ -75,10 +75,9 @@ UIBarButtonItem *barButton;
     });
 }
 
--(void)getContactsFromAddressBook
-{
+-(void)getContactsFromAddressBook{
     CFErrorRef error = NULL;
-    self.contacts = [[NSMutableArray alloc]init];
+    self.allDeviceContacts = [[NSMutableArray alloc]init];
     
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
     if (addressBook) {
@@ -122,9 +121,9 @@ UIBarButtonItem *barButton;
             CFRelease(addressBook);
         }
         
-        self.contacts = [NSArray arrayWithArray:mutableContacts];
+        self.allDeviceContacts = [NSArray arrayWithArray:mutableContacts];
         self.selectedContacts = [NSMutableArray array];
-        self.filteredContacts = self.contacts;
+        self.filteredContacts = self.allDeviceContacts;
         
         [self.tableView reloadData];
     }
@@ -137,15 +136,14 @@ UIBarButtonItem *barButton;
 
 - (void) refreshContacts
 {
-    for (THContact* contact in self.contacts)
+    for (THContact* contact in self.allDeviceContacts)
     {
         [self refreshContact: contact];
     }
     [self.tableView reloadData];
 }
 
-- (void) refreshContact:(THContact*)contact
-{
+- (void) refreshContact:(THContact*)contact{
     
     ABRecordRef contactPerson = ABAddressBookGetPersonWithRecordID(self.addressBookRef, (ABRecordID)contact.recordId);
     contact.recordId = ABRecordGetRecordID(contactPerson);
@@ -173,8 +171,7 @@ UIBarButtonItem *barButton;
     }
 }
 
-- (NSString *)getMobilePhoneProperty:(ABMultiValueRef)phonesRef
-{
+- (NSString *)getMobilePhoneProperty:(ABMultiValueRef)phonesRef{
     
     CFStringRef bestPhone = NULL;
     
@@ -337,10 +334,10 @@ UIBarButtonItem *barButton;
 
 - (void)contactPickerTextViewDidChange:(NSString *)textViewText {
     if ([textViewText isEqualToString:@""]){
-        self.filteredContacts = self.contacts;
+        self.filteredContacts = self.allDeviceContacts;
     } else {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.%@ contains[cd] %@ OR self.%@ contains[cd] %@", @"firstName", textViewText, @"lastName", textViewText];
-        self.filteredContacts = [self.contacts filteredArrayUsingPredicate:predicate];
+        self.filteredContacts = [self.allDeviceContacts filteredArrayUsingPredicate:predicate];
     }
     [self.tableView reloadData];
 }
@@ -352,7 +349,7 @@ UIBarButtonItem *barButton;
 - (void)contactPickerDidRemoveContact:(id)contact {
     [self.selectedContacts removeObject:contact];
     
-    NSUInteger index = [self.contacts indexOfObject:contact];
+    NSUInteger index = [self.allDeviceContacts indexOfObject:contact];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
     //cell.accessoryType = UITableViewCellAccessoryNone;
     
@@ -370,7 +367,7 @@ UIBarButtonItem *barButton;
 {
     [self.contactPickerView removeAllContacts];
     [self.selectedContacts removeAllObjects];
-    self.filteredContacts = self.contacts;
+    self.filteredContacts = self.allDeviceContacts;
     [self.tableView reloadData];
 }
 #pragma mark ABPersonViewControllerDelegate
@@ -395,7 +392,7 @@ UIBarButtonItem *barButton;
     self.title = [NSString stringWithFormat:@"Add Contacts (%lu)", (unsigned long)self.selectedContacts.count];
     
     // Reset the filtered contacts
-    self.filteredContacts = self.contacts;
+    self.filteredContacts = self.allDeviceContacts;
     
     [self.tableView reloadData];
     

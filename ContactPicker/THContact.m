@@ -7,6 +7,7 @@
 //
 
 #import "THContact.h"
+#import "THContactPhonePickerTableViewCell.h"
 
 @implementation THContact
 
@@ -60,6 +61,10 @@
     } else {
         return @"";
     }
+}
+
+- (Class)cellClass{
+	return [THContactPhonePickerTableViewCell class];
 }
 
 @end

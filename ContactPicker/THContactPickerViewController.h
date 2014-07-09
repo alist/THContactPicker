@@ -22,7 +22,7 @@
 
 @property (nonatomic, strong) THContactPickerView *contactPickerView;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *contacts; //THContact
+@property (nonatomic, strong) NSArray *allDeviceContacts; //THContact
 @property (nonatomic, strong) NSMutableArray *selectedContacts; //THContact
 @property (nonatomic, strong) NSArray *filteredContacts; //THContact
 @property (nonatomic, strong) NSMutableDictionary * contactsByRecordIDNumber; //THContact by NSNumber(ABRecordID)

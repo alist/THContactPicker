@@ -47,14 +47,14 @@
         self.contactImageView.image = [UIImage imageNamed:@"icon-avatar-60x60"];
     }
     
-    // Set the checked state for the contact selection checkbox
-    UIImage *image;
-    if (contact.isActive.boolValue){
-        image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
-    } else {
-        image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
-    }
-    self.checkboxImageView.image = image;
+//    // Set the checked state for the contact selection checkbox
+//    UIImage *image;
+//    if (contact.isActive.boolValue){
+//        image = [UIImage imageNamed:@"icon-checkbox-selected-green-25x25"];
+//    } else {
+//        image = [UIImage imageNamed:@"icon-checkbox-unselected-25x25"];
+//    }
+//    self.checkboxImageView.image = image;
     
 	return TRUE;
 }

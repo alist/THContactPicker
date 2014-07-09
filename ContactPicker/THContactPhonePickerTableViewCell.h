@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NICellCatalog.h"
 
-@interface THContactPhonePickerTableViewCell : UITableViewCell
+@interface THContactPhonePickerTableViewCell : UITableViewCell <NICell>
+@property (nonatomic, weak) IBOutlet UIImageView *contactImageView;
+@property (nonatomic, weak) IBOutlet UILabel *contactNameLabel;
+@property (nonatomic, weak) IBOutlet UILabel *mobilePhoneNumberLabel;
 
 @end

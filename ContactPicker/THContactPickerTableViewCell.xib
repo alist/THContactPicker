@@ -32,7 +32,7 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" tag="104" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon-checkbox-unselected-25x25" highlightedImage="icon-checkbox-selected-green-25x25" translatesAutoresizingMaskIntoConstraints="NO" id="0h7-ed-gn0">
+                    <imageView hidden="YES" userInteractionEnabled="NO" tag="104" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon-checkbox-unselected-25x25" highlightedImage="icon-checkbox-selected-green-25x25" translatesAutoresizingMaskIntoConstraints="NO" id="0h7-ed-gn0">
                         <rect key="frame" x="281" y="21" width="25" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
