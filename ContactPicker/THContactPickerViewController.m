@@ -166,7 +166,7 @@ UIBarButtonItem *barButton;
     }
     
     // Get image if it exists
-    NSData  *imgData = (__bridge_transfer NSData *)ABPersonCopyImageData(contactPerson);
+    NSData  *imgData = (__bridge_transfer NSData *)ABPersonCopyImageDataWithFormat(contactPerson,kABPersonImageFormatThumbnail);
     contact.image = [UIImage imageWithData:imgData];
     if (!contact.image) {
         contact.image = [UIImage imageNamed:@"icon-avatar-60x60"];
