@@ -17,7 +17,7 @@
 @property (nonatomic, assign) NSInteger recordId;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
-@property (nonatomic, assign) NSString *phone;
+@property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, assign) BOOL isFetched;//if false, then needs to refresh
